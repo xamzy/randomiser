@@ -16,8 +16,58 @@ function WaitWithText(ms)
     end
 end
 
-function T_RandomFuncs()
-    local funcs = {pedspawner,lockup,arcadecam,sheldonatorspawner,teleportation,halfspeed,doublespeed,takedamage,wanted,snow,money,onehitko,gokart,justdie}--negmoney,haveacar,mayhem
+function randomiser()
+gRandom = {p=0}
+export.StartRandom = function() -- random value based on points system
+	gRandom = {p=0}
+end
+export.AddRandom = function(points,value)
+	if points >= 1 then
+		gRandom.p = gRandom.p + math.floor(points)
+		gRandom[gRandom.p] = value
+	end
+end
+export.GetRandom = function()
+	if gRandom.p ~= 0 then
+		local index = gRandom.p
+		local point = math.random(1,index)
+		local value = gRandom[index]
+		while index > point do
+			index = index - 1
+			if gRandom[index] ~= nil then
+				value = gRandom[index]
+			end
+		end
+		if value == nil then
+			error("GetRandom failed",2) -- just a failsafe, should never actually happen.
+		end
+		return value
+	end
+	-- returns nothing if no random values were added.
+end
+
+StartRandom()
+AddRandom(25,"sheldonatorspawner")
+AddRandom(100,"arcadecam")
+AddRandom(5,"justdie")
+AddRandom(50,"lockup")
+AddRandom(30,"teleportation")
+AddRandom(25,"money")
+AddRandom(45,"gokart")
+AddRandom(55,"onehitko")
+AddRandom(65,"mayhem")
+AddRandom(75,"snow")
+AddRandom(75,"wanted")
+AddRandom(50,"takedamage")
+AddRandom(85,"halfspeed")
+AddRandom(85,"doublespeed")
+--770 POINTS
+--AddRandom("pedspawner")
+--AddRandom("qte")
+TextPrintString(GetRandom(),1,1)
+
+--[[function T_RandomFuncs()
+    local funcs = {pedspawner,lockup,arcadecam,sheldonatorspawner,qte,teleportation,halfspeed,doublespeed,takedamage,wanted,snow,money,onehitko,gokart,justdie}--negmoney,haveacar,mayhem
     local count = table.getn(funcs)
     while true do
         WaitWithText(30000)
@@ -27,9 +77,11 @@ end
 
 function main() 
     CreateThread("T_RandomFuncs")
-end
+end]] --OLD RANDOMISER
 
 function pedspawner() --80% Complete - need to make them aggressive for x time
+    TextPrintString("Debug Peds",3,2)
+    Wait(3000)
     TextPrintString("Spawn Random Peds",29,2)
     local x,y,z = PlayerGetPosXYZ()
     for i=1,7 do
@@ -50,9 +102,10 @@ function justdie() --i wonder if i could make this a qte so you don't die..
     Wait(2800)
 end
 
-function qte() --attempted qte?
+--[[function qte() --attempted qte?
     TextPrintString("Debug qte",3,2)
      Wait(2500)
+    TextPrintString("Quick Time Event!",29,2)
     local a = 7
     local b = 8
     local x = 6
@@ -71,20 +124,29 @@ function qte() --attempted qte?
     local controlTable = {0,1,2,3,6,7,8,9,10,11,12,13,14,15}
     local count = table.getn(controlTable)
      while true do
-        random=controlTable[math.random(1,count)]()
+        random = controlTable[math.random(1,count)]()
         wrong = not random
-        TextPrintString(random,3.5,2)
-        if IsButtonBeingPressed(random,0) then --goes infinately for now
+        TextPrintString(random,3,2)
+        if IsButtonBeingPressed(random,0) then
+         repeat
+            random
+         until PedIsDead(gPlayer)
             Wait(1500)
         elseif IsButtonBeingPressed(wrong,0) then --will just kill you to get out of it during development
             PlayerSetHealth(0)
             PlayerGetHealth(0)
             PedApplyDamage(gPlayer,3000)
-            Wait(2500)
+        end
+        ClockGet() = originalTime
+            Wait(3000)
+        if ClockGet() >= originalTime and IsButtonBeingReleased(random,0) then
+         PlayerSetHealth(0)
+         PlayerGetHealth(0)
+         PedApplyDamage(gPlayer,3000)
+        end
         end
     end
-end
-
+end]]
 
 
 --[[declare locals
@@ -430,7 +492,8 @@ end
 
 --[[function negmoney()
     TextPrintString("Lost Money",5,2)
-    PlayerAddMoney(math.random(-500,-7000))
+    	PlayerSetMoney(math.random(-500,-7000))
+	    PlayerGetMoney()
     Wait(1500)
 end]]
 
@@ -441,7 +504,7 @@ function onehitko()
     PedSetDamageGivenMultiplier(gPlayer,2,1) 
 end
 
---[[function mayhem()
+function mayhem()
 local originalAttitudes = {}
 local currentIndex = 0;
 for i=1,5 do --iterate through Nerds, Jocks, Dropouts, Greasers and Preps.
@@ -494,5 +557,4 @@ AreaOverridePopulation()
 --AreaClearAllPeds() -- If this is run, it's like a hard undo. Otherwise, let remaining fights linger on.
 PedSetGlobalAttitude_Rumble(false)
 end
-end]]
-
+end
