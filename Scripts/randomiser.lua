@@ -16,8 +16,8 @@ function WaitWithText(ms)
     end
 end
 
-function randomiser()
-gRandom = {p=0}
+
+--[[gRandom = {p=0}
 export.StartRandom = function() -- random value based on points system
 	gRandom = {p=0}
 end
@@ -42,7 +42,7 @@ export.GetRandom = function()
 			error("GetRandom failed",2) -- just a failsafe, should never actually happen.
 		end
 		return value
-	end
+    end
 	-- returns nothing if no random values were added.
 end
 
@@ -65,9 +65,10 @@ AddRandom(85,"doublespeed")
 --AddRandom("pedspawner")
 --AddRandom("qte")
 TextPrintString(GetRandom(),1,1)
+]]
 
---[[function T_RandomFuncs()
-    local funcs = {pedspawner,lockup,arcadecam,sheldonatorspawner,qte,teleportation,halfspeed,doublespeed,takedamage,wanted,snow,money,onehitko,gokart,justdie}--negmoney,haveacar,mayhem
+function T_RandomFuncs()
+    local funcs = {invulnerable,bulltime,nohud,fov}--pedspawner,lockup,arcadecam,sheldonatorspawner,teleportation,halfspeed,doublespeed,takedamage,wanted,snow,money,onehitko,gokart,justdie,negmoney,haveacar,mayhem,qte,weather,weapons
     local count = table.getn(funcs)
     while true do
         WaitWithText(30000)
@@ -77,7 +78,7 @@ end
 
 function main() 
     CreateThread("T_RandomFuncs")
-end]] --OLD RANDOMISER
+end
 
 function pedspawner() --80% Complete - need to make them aggressive for x time
     TextPrintString("Debug Peds",3,2)
@@ -367,7 +368,7 @@ function PedCreateSheldonator(x,y,z,ambient)
     return ped
 end
 function sheldonatorspawner()
-    LaunchScript("gSheldonator.lua")
+    --LaunchScript("gSheldonator.lua")
     LoadAnimationGroup("4_04_FunhouseFun")
     LoadAnimationGroup("Straf_Dout")
     LoadAnimationGroup("Straf_Male")
@@ -477,7 +478,7 @@ function gokart()
     TextPrintString("Gokart Spawn",29,2)
      local time = math.random(7500,26000)
      local x,y,z = PlayerGetPosXYZ()
-    kart = VehicleCreateXYZ(289,x+1,y,z)
+     local kart = VehicleCreateXYZ(289,x+1,y,z)
      Wait(time)
     PedExitVehicle(gPlayer)--untested
     Wait(2000)--try
@@ -558,3 +559,104 @@ AreaOverridePopulation()
 PedSetGlobalAttitude_Rumble(false)
 end
 end
+
+function gravity()
+     local time = math.random(6500,29000)
+    TextPrintString("Gravity Off",29,2)
+    PedSetEffectedByGravity(gPlayer,false)
+     Wait(time)
+    PedSetEffectedByGravity(gPlayer,true)
+end
+--PedResetAttitudes
+
+--[[function dog()
+    TextPrintString("Debug dog",4,2)
+     Wait(4000)
+    TextPrintString("Detroit Become Dog",29,2)
+      PedRequestModel(gPlayer,141) --??
+      PlayerSwapModel(141)
+     Wait(29000)
+      PlayerSwapModel(0) --1
+end]] --fix asap
+
+function crabblesnitch()
+TextPrintString("You Missed Detention!",29,2)
+    local time = math.random(6500,29000)
+    local x,y,z = PlayerGetPosXYZ()
+    local ped = PedCreateXYZ(65,x+2,y+2,z)
+     PedSetWeapon(ped,357)
+     GameSetPedStat(ped,20,101)
+     PedSetPedToTypeAttitude(ped,13,0)
+    Wait(time)
+     PedDelete(ped)
+end
+
+function invulnerable()
+    TextPrintString("Invincible",29,2)
+    PlayerSetInvulnerable(true)
+     Wait(29500)
+    PlayerSetInvulnerable(false)
+end
+
+--[[function lag()
+    local finishit = 
+    local time = math.random(2,950)
+     repeat
+        PlayerSetControl(0)
+         Wait(time)
+        PlayerSetControl(1)
+     until 
+    end
+end]]
+
+function bulltime()
+TextPrintString("Debug Bull",4,2)
+Wait(4000)
+TextPrintString("Bullworth Bulls!",29,2)
+    ClothingGetPlayer()
+    local originalClothing = ClothingBackup()
+     ClothingGivePlayerOutfit("Mascot")
+     ClothingSetPlayerOutfit("Mascot")
+     ClothingBuildPlayer()
+     Wait(29000)
+    ClothingRestore(originalClothing)
+    ClothingBuildPlayer()
+    Wait(1)
+end
+
+function nohud()
+TextPrintString("Debug HUD",4,2)
+ Wait(4000)
+TextPrintString("No HUD",29,2)
+ HUDSaveVisibility()
+ HUDClearAllElements()
+ PauseGameClock()
+  Wait(29000)
+ HUDRestoreVisibility()
+ UnpauseGameClock()
+end
+
+function fov()
+local random = math.random(95,175)
+ TextPrintString("Debug FOV",4,2)
+  Wait(4000)
+ TextPrintString("Crazy FOV")
+CameraGetFOV()
+ CameraSetFOV(random)
+  Wait(29000)
+ CameraDefaultFOV()
+end
+
+--[[function cower()
+TextPrintString("Debug Cower",4,2)
+ Wait(4000)
+TextPrintString("Cower in Fear!",29,2)
+ GetTimer() + 29000
+ local time = math.random(200,1650)
+repeat
+    --not sure if something is needed here.
+ PedSetActionNode(gPlayer,"/Global/1_07/Cower","Act/Conv/1_07.act")
+ Wait(time)
+ Wait(3000)
+until GetTimer() = nil
+end]]--will just make a randomised animation function.
