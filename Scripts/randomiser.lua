@@ -16,18 +16,17 @@ function WaitWithText(ms)
     end
 end
 
-
 --[[gRandom = {p=0}
-export.StartRandom = function() -- random value based on points system
+StartRandom = function() -- random value based on points system
 	gRandom = {p=0}
 end
-export.AddRandom = function(points,value)
+AddRandom = function(points,value)
 	if points >= 1 then
 		gRandom.p = gRandom.p + math.floor(points)
 		gRandom[gRandom.p] = value
 	end
 end
-export.GetRandom = function()
+GetRandom = function()
 	if gRandom.p ~= 0 then
 		local index = gRandom.p
 		local point = math.random(1,index)
@@ -48,27 +47,19 @@ end
 
 StartRandom()
 AddRandom(25,"sheldonatorspawner")
-AddRandom(100,"arcadecam")
 AddRandom(5,"justdie")
-AddRandom(50,"lockup")
-AddRandom(30,"teleportation")
-AddRandom(25,"money")
-AddRandom(45,"gokart")
-AddRandom(55,"onehitko")
-AddRandom(65,"mayhem")
-AddRandom(75,"snow")
-AddRandom(75,"wanted")
-AddRandom(50,"takedamage")
-AddRandom(85,"halfspeed")
-AddRandom(85,"doublespeed")
---770 POINTS
+AddRandom(40,"lockup")
+AddRandom(85,"arcadecam")
+AddRandom(80,"halfspeed")
+AddRandom
+
 --AddRandom("pedspawner")
 --AddRandom("qte")
-TextPrintString(GetRandom(),1,1)
-]]
+TextPrintString(GetRandom(),1,1)]]
+
 
 function T_RandomFuncs()
-    local funcs = {invulnerable,bulltime,nohud,fov}--pedspawner,lockup,arcadecam,sheldonatorspawner,teleportation,halfspeed,doublespeed,takedamage,wanted,snow,money,onehitko,gokart,justdie,negmoney,haveacar,mayhem,qte,weather,weapons
+    local funcs = {gokart,teleportation}--justdie,lockup,sheldonatorspawner,arcadecam,halfspeed,doublespeed,takedamage,wanted,snow,gokart,money,onehitko,gravity,invulnerable,bulltime,nohud,fov,weather,pedspawner,lockup,arcadecam,sheldonatorspawner,teleportation,halfspeed,doublespeed,takedamage,wanted,snow,money,onehitko,gokart,justdie,negmoney,haveacar,mayhem,qte,weather,weapons
     local count = table.getn(funcs)
     while true do
         WaitWithText(30000)
@@ -80,15 +71,16 @@ function main()
     CreateThread("T_RandomFuncs")
 end
 
+
 function pedspawner() --80% Complete - need to make them aggressive for x time
     TextPrintString("Debug Peds",3,2)
     Wait(3000)
     TextPrintString("Spawn Random Peds",29,2)
     local x,y,z = PlayerGetPosXYZ()
     for i=1,7 do
-     PedCreateXYZ(math.random(2,258),x+i,y,z)
+    peds = PedCreateXYZ(math.random(2,258),x+i,y,z)
     end
-    PedSetPedToTypeAttitude(i,13,0)
+    PedSetPedToTypeAttitude(peds,13,0)
     if x ~=9999 and y ~=9999 and z ~=9999 then
 		return x,y,z
     end
@@ -397,13 +389,178 @@ local x,y,z = PlayerGetPosXYZ()
  PedCreateSheldonator(x+3,y,z,true)
  repeat
     Wait(1)
- until PedIsDead(gPlayer)
+ until PedIsDead(gPlayer) or PedIsDead(gSheldonator)
 end
 
-function teleportation() --10% Complete
-TextPrintString("Teleportation to Random Location",29,2)
-AreaTransitionXYZ(0,265,-110,6) --temp (need coord list)
+--[[function randomteleportation() --40% Complete
+ TextPrintString("Debug Teleportation",4,2)
+  Wait(4000)
+ TextPrintString("Teleported to Random Location",29,2)
+local locTable = {
+    "0,265, -110, 6", --outside dorm
+    "2,-628.28, -312.97, 0.00",--schoolhallways
+    "4,-599.08, 325.00, 34.22",--chemlab
+    "5,-701.37, 214.76, 31.55",--principals office
+    "6,-711.12, 312.25, 33.38",--biology lab
+    "8,-730.91, -56.17, 9.89",--janitor room
+    "9,-786.53, 202.86, 90.13",--library
+    "13,-622.60, -72.63, 59.61",--pool
+    "14,-502.28, 310.96, 31.41",--boysdorm
+    "15,-560.40, 315.86, -1.95",--classroom
+    "16,-655.90, 81.57, 9.99",--trailer
+    "17,-537.39, 375.90, 14.03",--artroom
+    "18,-427.33, 364.87, 80.84",--autoshop
+    "19,-778.50, 294.50, 77.47",--auditorium
+    "20,-755.68, 96.27, 30.80",--chemplant
+    "23,-654.19, 227.29, -0.39",--staffroom
+    "26,-572.13, 387.32, 0.07",--grocery store
+    "27,-723.70, 371.16, 294.41",--boxing ring
+    "29,-785.62, 379.38, 0.00",--bike shop vale
+    "30,-724.71, 14.51, 0.00",--comic shop vale
+    "32,-567.37, 133.24, 46.15",--prep house
+    "33,-707.84, 259.35, 0.00",--rich clothing
+    "34,-647.37, 257.80, 0.93",--poor clothing
+    "35,-439.02, 318.77, -7.90",--girls dorm
+    "36,-544.59, -49.03, 31.00",--tenements
+    "37,-711.86, -537.98, 8.10",--house of mirrors
+    "38,-735.31, 422.98, 2.00",--asylum
+    "39,-655.66, 124.12, 2.99",--barber
+    "40,-694.96, 75.75, 20.25",--observ
+    "42,-310.60, 496.36, 1.00",--gokart
+    "43,-753.54, -606.70, 6.75",--junkyard
+    "45,-793.77, 90.96, 9.96",--midway
+    "46,-766.53, 21.18, 2.95",--hair salon
+    "50,-792.76, 47.74, 6.69",--souvenir
+    "51,-88.38, 68.73, 26.63",--imgraceA
+    "52,-36.88, 38.91, 0.45",--imgraceB
+    "53,-39.78, 62.38, 62.15",--imgraceC
+    "54,-672.29, -169.27, 0.06",--warehouse
+    "55,-469.43, -77.54, 9.07",--freakshow
+    "56,-664.98, 390.62, 2.43",--poor barbers
+    "57,-655.29, 246.27, 15.22",--idropouts
+    "59,-748.85, 348.84, 3.51",--ijocks
+    "60,-773.40, 351.50, 6.41",--ipreps
+    "61,-691.91, 344.91, 3.29",--igreasers
+    "62,-775.55, 634.97, 29.11",--bmxtracks
+}
+local count = table.getn(locTable)
+    while true do
+     locTable[AreaTransitionXYZ(math.random(1,count))]()
+    end
+end]]
+
+function telebdorm()
+TextPrintString("Debug Bdorm",4,2)
+ Wait(4000)
+TextPrintString("Teleported to Boys Dorm",5,2)
+    AreaTransitionXYZ(14, -502.28, 310.96, 31.41)
+    Wait(5000)
 end
+
+function teletenements()
+TextPrintString("Debug tenements",4,2)
+ Wait(4000)
+TextPrintString("Teleported to Tenements",5,2)
+    AreaTransitionXYZ(36, -544.59, -49.03, 31.00)
+    Wait(5000)
+end
+
+function telelibrary()
+TextPrintString("Debug library",4,2)
+ Wait(4000)
+TextPrintString("Teleported to Library",5,2)
+    AreaTransitionXYZ(9, -786.53, 202.86, 90.13)
+    Wait(5000)
+end
+
+function telegrocery()
+TextPrintString("Debug grocery",4,2)
+ Wait(4000)
+TextPrintString("Teleported to Grocery Store",5,2)
+    AreaTransitionXYZ(26, -572.13, 387.32, 0.07)
+    Wait(5000)
+end
+
+function telebmx()
+TextPrintString("Debug BMX",4,2)
+ Wait(4000)
+TextPrintString("Teleported to BMX Park",5,2)
+    AreaTransitionXYZ(62,-775.55, 634.97, 29.11)
+    Wait(5000)
+end
+
+function telefinalcut()
+TextPrintString("Debug finalcut",4,2)
+ Wait(4000)
+TextPrintString("Teleported to Final Cut",5,2)
+    AreaTransitionXYZ(34,-647.37, 257.80, 0.93)
+    Wait(5000)
+end
+
+function teleaquaberry()
+TextPrintString("Debug aqua",4,2)
+ Wait(4000)
+TextPrintString("Teleported to Aquaberry Clothing",5,2)
+    AreaTransitionXYZ(33, -707.84, 259.35, 0.00)
+    Wait(5000)
+end
+
+function telefreaks()
+TextPrintString("Debug freaks",4,2)
+ Wait(4000)
+TextPrintString("Teleported to Freakshow",5,2)
+    AreaTransitionXYZ(55,-469.43, -77.54, 9.07)
+    Wait(5000)
+end
+
+
+--[[MAIN_MAP        0   0.00, 0.00, 0.00
+SCHOOLHALLWAYS  2   -628.28, -312.97, 0.00             
+CHEM_LAB        4   -599.08, 325.00, 34.22
+PRINCIPAL       5   -701.37, 214.76, 31.55
+BIO_LAB         6   -711.12, 312.25, 33.38
+JANITORSROOM    8   -730.91, -56.17, 9.89
+LIBRARY         9   -786.53, 202.86, 90.13
+POOL            13  -622.60, -72.63, 59.61
+BOYS_DORM       14  -502.28, 310.96, 31.41
+CLASSROOM       15  -560.40, 315.86, -1.95
+TRAILER         16  -655.90, 81.57, 9.99
+ART_ROOM        17  -537.39, 375.90, 14.03
+AUTOSHOP        18  -427.33, 364.87, 80.84
+AUDITORIUM      19  -778.50, 294.50, 77.47
+CHEM_PLANT      20  -755.68, 96.27, 30.80
+Staff_Room      23  -654.19, 227.29, -0.39
+GroceryStore    26  -572.13, 387.32, 0.07
+BoxingRing      27  -723.70, 371.16, 294.41
+BIKE_SHOP_RICH  29  -785.62, 379.38, 0.00
+COMIC_SHOP_RICH 30  -724.71, 14.51, 0.00
+PREP_HOUSE      32  -567.37, 133.24, 46.15
+RICH_CLOTH      33  -707.84, 259.35, 0.00
+POOR_CLOTH      34  -647.37, 257.80, 0.93
+GIRLS_DORM      35  -439.02, 318.77, -7.90
+TENEMENT        36  -544.59, -49.03, 31.00
+HOUSEOFMIRRORS  37  -711.86, -537.98, 8.10
+ASYLUM          38  -735.31, 422.98, 2.00
+BARBER          39  -655.66, 124.12, 2.99
+OBSERVATORY     40  -694.96, 75.75, 20.25
+TGOKART         42  -310.60, 496.36, 1.00
+JUNKYARD        43  -753.54, -606.70, 6.75
+MIDWAY          45  -793.77, 90.96, 9.96
+HAIR_SALON      46  -766.53, 21.18, 2.95
+SOUVENIR        50  -792.76, 47.74, 6.69
+IMGRACEA        51  -88.38, 68.73, 26.63
+IMGRACEB        52  -36.88, 38.91, 0.45
+IMGRACEC        53  -39.78, 62.38, 62.15
+WAREHOUSE       54  -672.29, -169.27, 0.06
+FREAK_SHOW      55  -469.43, -77.54, 9.07
+POOR_HAIR       56  -664.98, 390.62, 2.43
+IDROPS          57  -655.29, 246.27, 15.22
+IJOCKS          59  -748.85, 348.84, 3.51
+IPREPS          60  -773.40, 351.50, 6.41
+IGRSRS          61  -691.91, 344.91, 3.29
+BMXTRACK        62  -775.55, 634.97, 29.11
+end
+]]
 
 function arcadecam()
  TextPrintString("Arcade Camera",29,2)
@@ -442,8 +599,22 @@ function wanted()
  PedSetPunishmentPoints(gPlayer,500)
 end
 
---function weather() - this will be a randomised weather function as well as the snow to fuck you over
---end
+function weather() -- this will be a randomised weather function as well as the snow to fuck you over
+TextPrintString("Debug Weather",4,2)
+ Wait(4000)
+TextPrintString("Random Weather",29,2)
+    local originalChapter = ChapterGet()
+    local originalWeather = WeatherGet()
+        for i=1,5 do 
+         ChapterSet(i)
+         WeatherSet(i)
+        end
+    Wait(29000)
+     ChapterSet(originalChapter)
+     WeatherSet(originalWeather)
+    Wait(1000)
+end
+
 
 function snow()
     local originalChapter = ChapterGet()
@@ -480,7 +651,7 @@ function gokart()
      local x,y,z = PlayerGetPosXYZ()
      local kart = VehicleCreateXYZ(289,x+1,y,z)
      Wait(time)
-    PedExitVehicle(gPlayer)--untested
+    PedExitVehicle(gPlayer,kart)--untested
     Wait(2000)--try
     VehicleDelete(kart)
 end
@@ -538,6 +709,8 @@ AreaClearAllPeds() -- ?
 PedSetGlobalAttitude_Rumble(true) -- ?
 DisablePunishmentSystem(true)
 
+TextPrintString("Debug Mayhem",4,2)
+Wait(4000)
 TextPrintString("Complete Mayhem",29,2)
 Wait(29000) -- Feel free to change.
  
@@ -559,6 +732,7 @@ AreaOverridePopulation()
 PedSetGlobalAttitude_Rumble(false)
 end
 end
+--PedResetAttitudes
 
 function gravity()
      local time = math.random(6500,29000)
@@ -567,7 +741,7 @@ function gravity()
      Wait(time)
     PedSetEffectedByGravity(gPlayer,true)
 end
---PedResetAttitudes
+
 
 --[[function dog()
     TextPrintString("Debug dog",4,2)
@@ -587,6 +761,8 @@ TextPrintString("You Missed Detention!",29,2)
      PedSetWeapon(ped,357)
      GameSetPedStat(ped,20,101)
      PedSetPedToTypeAttitude(ped,13,0)
+     PedSetEmotionTowardsPed(ped,gPlayer,0)
+     PedGetEmotionTowardsPed(ped,gPlayer)
     Wait(time)
      PedDelete(ped)
 end
@@ -625,8 +801,6 @@ TextPrintString("Bullworth Bulls!",29,2)
 end
 
 function nohud()
-TextPrintString("Debug HUD",4,2)
- Wait(4000)
 TextPrintString("No HUD",29,2)
  HUDSaveVisibility()
  HUDClearAllElements()
@@ -638,8 +812,6 @@ end
 
 function fov()
 local random = math.random(95,175)
- TextPrintString("Debug FOV",4,2)
-  Wait(4000)
  TextPrintString("Crazy FOV")
 CameraGetFOV()
  CameraSetFOV(random)
@@ -660,3 +832,39 @@ repeat
  Wait(3000)
 until GetTimer() = nil
 end]]--will just make a randomised animation function.
+
+function fallover()
+TextPrintString("Debug Fallover",4,2)
+ Wait(4000)
+TextPrintString("No Running Allowed",29,2)
+    local a = 7
+    if IsButtonBeingPressed(a,0) then 
+        PedSetActionNode(gPlayer,"Collapse","Act/Globals.act")
+    end
+end
+
+function nopower()
+TextPrintString("Debug nopower",4,2)
+Wait(4000)
+TextPrintString("Jimmy is weak",29,2)
+    PedSetDamageGivenMultiplier(gPlayer,2,0.01)
+     Wait(29000)
+    PedSetDamageGivenMultiplier(gPlayer,2,1) 
+end
+
+function bodyguard()
+TextPrintString("Debug bodyguard",4,2)
+Wait(4000)
+TextPrintString("Pete's your Bodyguard",29,2)
+    local x,y,z = PlayerGetPosXYZ()
+    local bunny = PedCreateXYZ(165,x+1,y,z)
+    PedRecruitAlly(gPlayer,bunny)
+        Wait(29000)
+    PedDismissAlly(gPlayer,bunny)
+    PedDelete(bunny)
+end
+
+function nothing()
+ TextPrintString("Absolutely Nothing, You're Safe",5,2)
+    Wait(5000)
+end
