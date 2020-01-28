@@ -59,7 +59,7 @@ TextPrintString(GetRandom(),1,1)]]
 
 
 function T_RandomFuncs()
-    local funcs = {gokart,teleportation}--justdie,lockup,sheldonatorspawner,arcadecam,halfspeed,doublespeed,takedamage,wanted,snow,gokart,money,onehitko,gravity,invulnerable,bulltime,nohud,fov,weather,pedspawner,lockup,arcadecam,sheldonatorspawner,teleportation,halfspeed,doublespeed,takedamage,wanted,snow,money,onehitko,gokart,justdie,negmoney,haveacar,mayhem,qte,weather,weapons
+    local funcs = {forcepackage}--justdie,lockup,sheldonatorspawner,arcadecam,halfspeed,doublespeed,takedamage,wanted,snow,gokart,money,onehitko,gravity,invulnerable,bulltime,nohud,fov,weather,pedspawner,lockup,arcadecam,sheldonatorspawner,teleportation,halfspeed,doublespeed,takedamage,wanted,snow,money,onehitko,gokart,justdie,negmoney,haveacar,mayhem,qte,weather,weapons
     local count = table.getn(funcs)
     while true do
         WaitWithText(30000)
@@ -69,6 +69,7 @@ end
 
 function main() 
     CreateThread("T_RandomFuncs")
+    CreateThread("F_GetPlayerPos")
 end
 
 
@@ -449,69 +450,103 @@ local count = table.getn(locTable)
     end
 end]]
 
+
+--REMOVE SOME OF THE REALLY SHIT ONES FOR MORE INTERESTING ONES AND DON'T INCLUDE TOO MANY OR IT'LL 
+--MAKE THE TELEPORTATION WAY TOO COMMON.
 function telebdorm()
-TextPrintString("Debug Bdorm",4,2)
- Wait(4000)
 TextPrintString("Teleported to Boys Dorm",5,2)
     AreaTransitionXYZ(14, -502.28, 310.96, 31.41)
     Wait(5000)
 end
 
 function teletenements()
-TextPrintString("Debug tenements",4,2)
- Wait(4000)
 TextPrintString("Teleported to Tenements",5,2)
     AreaTransitionXYZ(36, -544.59, -49.03, 31.00)
     Wait(5000)
 end
 
 function telelibrary()
-TextPrintString("Debug library",4,2)
- Wait(4000)
 TextPrintString("Teleported to Library",5,2)
     AreaTransitionXYZ(9, -786.53, 202.86, 90.13)
     Wait(5000)
 end
 
 function telegrocery()
-TextPrintString("Debug grocery",4,2)
- Wait(4000)
 TextPrintString("Teleported to Grocery Store",5,2)
     AreaTransitionXYZ(26, -572.13, 387.32, 0.07)
     Wait(5000)
 end
 
 function telebmx()
+    if ChapterGet() < 3 then do
+        TextPrintString("Teleported to Town Hall",5,2)
+        AreaTransitionXYZ(0,650.1,-90.3,32.9)
+        Wait(5000)
+        --return 
+    end
+    elseif ChapterGet() >= 3 then
+        TextPrintString("Teleported to BMX Park",5,2)
+        AreaTransitionXYZ(62,-775.55, 634.97, 29.11)
+        Wait(5000)
+    end
+end
+
+function teleasylum()
+    if ChapterGet() < 3 then do
+         TextPrintString("Debug Asylum",4,2)
+         Wait(4000)
+        TextPrintString("Teleported to Asylum",5,2)
+        AreaTransitionXYZ(0,-74.8,-301.3,4.4)
+        Wait(5000)
+        --return 
+    end
+    elseif ChapterGet() >= 3 then
+         TextPrintString("Debug Town Hall",4,2)
+         Wait(4000)
+        TextPrintString("Teleported to Town Hall",5,2)
+        AreaTransitionXYZ(0,650.1,-90.3,32.9)
+        Wait(5000)
+    end
+end
+
+--0,650.1,-90.3,32.9 Town Hall
+--0,113.3,-499.2,2.6 -- wonder meats
+--0,-74.8,-301.3,4.4 -- asylum outside tunnel.
+
+--[[function ignore1()
+local originalChapter = ChapterGet() 
 TextPrintString("Debug BMX",4,2)
  Wait(4000)
 TextPrintString("Teleported to BMX Park",5,2)
     AreaTransitionXYZ(62,-775.55, 634.97, 29.11)
-    Wait(5000)
-end
+    AreaSetDoorLocked(TRIGGER._DT_TPOOR_BMX, false)
+        Wait(FADE_IN_TIME)
+        Wait(500)
+    if not PedIsInAreaXYZ(gPlayer,62,-775.55, 634.97, 29.11,20) then
+        AreaSetDoorLocked(TRIGGER._DT_TPOOR_BMX, true)
+    end
+end]]
+--MinigameSetCompletion("M_PASS", true, 2000, "3_02_UNLOCK") ?
 
 function telefinalcut()
-TextPrintString("Debug finalcut",4,2)
- Wait(4000)
 TextPrintString("Teleported to Final Cut",5,2)
     AreaTransitionXYZ(34,-647.37, 257.80, 0.93)
     Wait(5000)
 end
 
 function teleaquaberry()
-TextPrintString("Debug aqua",4,2)
- Wait(4000)
 TextPrintString("Teleported to Aquaberry Clothing",5,2)
     AreaTransitionXYZ(33, -707.84, 259.35, 0.00)
     Wait(5000)
 end
 
-function telefreaks()
+--[[function telefreaks()
 TextPrintString("Debug freaks",4,2)
  Wait(4000)
 TextPrintString("Teleported to Freakshow",5,2)
     AreaTransitionXYZ(55,-469.43, -77.54, 9.07)
     Wait(5000)
-end
+end]]
 
 
 --[[MAIN_MAP        0   0.00, 0.00, 0.00
@@ -561,6 +596,11 @@ IGRSRS          61  -691.91, 344.91, 3.29
 BMXTRACK        62  -775.55, 634.97, 29.11
 end
 ]]
+--[[function testfunction()
+    GameSetPedStat(gPlayer,20,150)
+        Wait(local value = math.random(10000,30000))
+    TextPrintString("test1",value,2)
+end]]
 
 function arcadecam()
  TextPrintString("Arcade Camera",29,2)
@@ -709,7 +749,7 @@ AreaClearAllPeds() -- ?
 PedSetGlobalAttitude_Rumble(true) -- ?
 DisablePunishmentSystem(true)
 
-TextPrintString("Debug Mayhem",4,2)
+TextPrintString("Debug Mayhem",4,2) --this whole thing makes complete mayhem get stuck in a loop
 Wait(4000)
 TextPrintString("Complete Mayhem",29,2)
 Wait(29000) -- Feel free to change.
@@ -735,7 +775,7 @@ end
 --PedResetAttitudes
 
 function gravity()
-     local time = math.random(6500,29000)
+local time = math.random(6500,29000)
     TextPrintString("Gravity Off",29,2)
     PedSetEffectedByGravity(gPlayer,false)
      Wait(time)
@@ -764,7 +804,7 @@ TextPrintString("You Missed Detention!",29,2)
      PedSetEmotionTowardsPed(ped,gPlayer,0)
      PedGetEmotionTowardsPed(ped,gPlayer)
     Wait(time)
-     PedDelete(ped)
+    PedDelete(ped)
 end
 
 function invulnerable()
@@ -786,22 +826,21 @@ end
 end]]
 
 function bulltime()
-TextPrintString("Debug Bull",4,2)
-Wait(4000)
 TextPrintString("Bullworth Bulls!",29,2)
     ClothingGetPlayer()
     local originalClothing = ClothingBackup()
      ClothingGivePlayerOutfit("Mascot")
      ClothingSetPlayerOutfit("Mascot")
      ClothingBuildPlayer()
-     Wait(29000)
-    ClothingRestore(originalClothing)
-    ClothingBuildPlayer()
+      Wait(29000)
+     ClothingRestore(originalClothing)
+     ClothingBuildPlayer()
     Wait(1)
 end
 
 function nohud()
 TextPrintString("No HUD",29,2)
+Wait(1000)
  HUDSaveVisibility()
  HUDClearAllElements()
  PauseGameClock()
@@ -812,11 +851,11 @@ end
 
 function fov()
 local random = math.random(95,175)
- TextPrintString("Crazy FOV")
-CameraGetFOV()
- CameraSetFOV(random)
-  Wait(29000)
- CameraDefaultFOV()
+TextPrintString("Crazy FOV",29,2)
+    CameraGetFOV()
+    CameraSetFOV(random)
+     Wait(29000)
+    CameraDefaultFOV()
 end
 
 --[[function cower()
@@ -844,8 +883,6 @@ TextPrintString("No Running Allowed",29,2)
 end
 
 function nopower()
-TextPrintString("Debug nopower",4,2)
-Wait(4000)
 TextPrintString("Jimmy is weak",29,2)
     PedSetDamageGivenMultiplier(gPlayer,2,0.01)
      Wait(29000)
@@ -859,6 +896,10 @@ TextPrintString("Pete's your Bodyguard",29,2)
     local x,y,z = PlayerGetPosXYZ()
     local bunny = PedCreateXYZ(165,x+1,y,z)
     PedRecruitAlly(gPlayer,bunny)
+    PedSetPedToTypeAttitude(bunny,13,4) --may not need
+    PedSetHealth(bunny,1650)
+    PedSetDamageGivenMultiplier(bunny,2,4)
+    PedSetActionTree(bunny,"/Global/J_Grappler_A","Act/Anim/J_Grappler_A.act")
         Wait(29000)
     PedDismissAlly(gPlayer,bunny)
     PedDelete(bunny)
@@ -867,4 +908,190 @@ end
 function nothing()
  TextPrintString("Absolutely Nothing, You're Safe",5,2)
     Wait(5000)
+end
+
+function onehitdeath()
+TextPrintString("Debug death",4,2)
+    Wait(4000)
+TextPrintString("One Hit Death",29,2)
+    if PedIsHit(gPlayer) then
+        PedApplyDamage(gPlayer,9999)
+        PlayerGetHealth()
+    end
+    Wait(29000)
+end
+
+function earrape()
+--makeaudioloud
+end
+
+function vibration()
+TextPrintString("Debug Vibration",4,2)
+Wait(4000)
+TextPrintString("Controller Vibration Hell",29,2)
+    StartVibration()
+     Wait(29000)
+    StopVibration()
+end
+
+function induceArtificalLagspike(durationMs,goalFrameRate)
+    local timer = GetTimer()
+    local expire = timer + durationMs
+    local iterations = 30000
+    while timer < expire do
+        for i = 1,iterations do
+            -- measure the distance between the player and every ped
+            local i,peds = 2,{PedFindInAreaXYZ(0,0,0,9999999)}
+            while peds[i] do
+                i = i + 1
+                DistanceBetweenPeds3D(gPlayer,peds[i])
+            end
+        end
+        --TextPrintString("lag ("..iterations..")",0,1)
+        Wait(0)
+        local update = GetTimer()
+        local frame = (update - timer) / 1000
+        timer = update
+        iterations = math.floor(iterations * ((1/goalFrameRate) / frame))
+        if iterations > 1000 then
+            iterations = iterations - 1000
+        elseif iterations < 300000 then
+            iterations = iterations + 1000
+        end
+    end
+end
+
+function lagspike()
+TextPrintString("Lag",29,2)
+    local start = GetTimer() + 20
+    local framerate = math.random(10,24)
+    local timer = GetTimer()
+    local expire = timer + 29500
+    while timer < expire do
+        repeat
+         induceArtificalLagspike(1650,framerate)
+         Wait(1050)
+        until start > expire
+    end
+end
+
+function fakelag()
+TextPrintString("Lag",29,2)
+    time_between_lags = 10000
+    condition = false
+    while true do
+        Wait(0)
+        Wait(time_between_lags)
+        repeat
+            local peds = {PedFindInAreaXYZ(0,0,0,999999)}
+            local xs = {}
+            for y = 1,table.getn(peds) do
+                xs[y] = {PedGetPosXYZ(peds[y])}
+            end
+            Wait(math.random(1,12)*math.random(1,12))
+            for x = 1,table.getn(peds) do
+                if math.random(1,10) == 1 then
+                    PedSetPosXYZ(peds[x],xs[x][1],xs[x][2],xs[x][3])
+                end
+            end
+            Wait(math.random(1,12)*math.random(1,12))
+        until condition == true
+    end
+end
+
+function evilcars()
+TextPrintString("Evil Cars",29,2)
+    while true do
+        Wait(0)
+        tab_veh = VehicleGetAllVehicles()
+        for i = 1,table.getn(tab_veh) do
+            -- Wait(0)
+            if VehicleIsValid(tab_veh[i]) then
+                if VehicleGetModelId(tab_veh[i]) > 283 and not PlayerIsInVehicle(tab_veh[i]) then
+                    VehicleMoveToXYZ(tab_veh[i],player_x,player_y,player_z)
+                    VehicleSetCruiseSpeed(tab_veh[i],15)
+                    VehicleOverrideAmbientCruiseSpeed(tab_veh[i],15)
+                end
+            end
+        end
+        
+        
+        tab_ped = PedGetAllPeds()
+        for i = 1,table.getn(tab_ped) do
+            -- Wait(0)
+            -- local x,y,z = 0,0,0
+            if PedIsDead(tab_ped[i]) and PedGetName(tab_ped[i]) ~= "N_Jimmy" then
+                PedSetEffectedByGravity(tab_ped[i],false)
+                local x,y,z = PedGetPosXYZ(tab_ped[i])
+                PedSetPosXYZ(tab_ped[i],x,y,z+0.05)
+                if z > (player_z + 36) then
+                    PedDelete(tab_ped[i])
+                end
+            end
+        end
+    end
+end
+function PedGetAllPeds()
+    local peds = {PedFindInAreaXYZ(0,0,0,999999)}
+    table.remove(peds,1)
+    return peds
+end
+function VehicleGetAllVehicles()
+    local vehicles = VehicleFindInAreaXYZ(0,0,0,999999)
+    if type(vehicles) == "table" then
+        return vehicles
+    else
+        return {}
+    end
+end
+
+
+function forcepackage()
+    TextPrintString("Debug gift",4,2)
+    Wait(4000)
+    TextPrintString("Receieve a Gift",10,2)
+    while true do
+        local peds = {PedFindInAreaXYZ(0,0,0,999999)}
+        local count = table.getn(peds)
+        table.remove(peds,1)
+        while count > 0 do
+            local ped = table.remove(peds,math.random(1,count))
+            if DistanceBetweenPeds3D(gPlayer,ped) < 6 and not PedIsPlayer(ped) then
+                PedLockTarget(ped,gPlayer,3)
+                PedSetActionNode(ped,"/Global/Player/Gifts/Errand_IND_Package","Act/Player.act")
+                repeat
+                    Wait(0)
+                until not PedIsPlaying(ped,"/Global/Player/Gifts/Errand_IND_Package",true)
+                PedLockTarget(ped,-1)
+                return
+            end
+        end
+        Wait(0)
+    end
+end
+
+function alonattack()
+TextPrintString("Alon Attack",29,2)
+    while true do
+        Wait(0)
+        local peds = {PedFindInAreaXYZ(0,0,0,999999)}
+        local distanceCutoff = 50
+        local pedCap = 22
+        if table.getn(peds) < pedCap then
+            Wait(math.random(1,10)*100)
+            local x,y,z = 9999,9999,9999
+            repeat
+                Wait(0)
+                x,y,z = PedFindRandomSpawnPosition()
+            until x < 9990
+            local id = 135
+            PedWander(PedCreateXYZ(id,x,y,z))
+        end
+        for i = 1,table.getn(peds) do
+            if DistanceBetweenPeds3D(gPlayer,peds[i]) > distanceCutoff or (DistanceBetweenPeds3D(gPlayer,peds[i]) > (distanceCutoff / 2) and not PedIsOnScreen(peds[i])) then
+                PedDelete(peds[i])
+            end
+        end
+        Wait(29000)
+    end
 end
