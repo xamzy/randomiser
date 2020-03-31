@@ -16,6 +16,16 @@ function WaitWithText(ms)
     end
 end
 
+
+function T_debug()
+    while true do
+        Wait(0)
+        if IsButtonPressed(10,0) and IsButtonPressed(14,0) and IsButtonPressed(8,0) then --lt, leftstick, b
+            PedApplyDamage(gPlayer,PlayerGetHealth()+100)
+        end
+    end
+end
+
 --[[gRandom = {p=0}
 StartRandom = function() -- random value based on points system
 	gRandom = {p=0}
@@ -59,7 +69,7 @@ TextPrintString(GetRandom(),1,1)]]
 
 
 function T_RandomFuncs()
-    local funcs = {forcepackage}--justdie,lockup,sheldonatorspawner,arcadecam,halfspeed,doublespeed,takedamage,wanted,snow,gokart,money,onehitko,gravity,invulnerable,bulltime,nohud,fov,weather,pedspawner,lockup,arcadecam,sheldonatorspawner,teleportation,halfspeed,doublespeed,takedamage,wanted,snow,money,onehitko,gokart,justdie,negmoney,haveacar,mayhem,qte,weather,weapons
+    local funcs = {onehitdeath,teleasylum,telebmx,nothing,petefan,nopower,teleaquaberry,telefinalcut,teletenements,telebdorm,fov,nohud,bulltime,invulnerable,gravity,onehitko,money,gokart,snow,wanted,takedamage,doublespeed,halfspeed,arcadecam,sheldonatorspawner,lockup,justdie}
     local count = table.getn(funcs)
     while true do
         WaitWithText(30000)
@@ -67,9 +77,12 @@ function T_RandomFuncs()
     end
 end
 
+
+
 function main() 
     CreateThread("T_RandomFuncs")
     CreateThread("F_GetPlayerPos")
+    CreateThread("T_debug")
 end
 
 
@@ -460,6 +473,10 @@ TextPrintString("Teleported to Boys Dorm",5,2)
 end
 
 function teletenements()
+    local originalChapter = ChapterGet()
+    if originalChapter <=2 then
+        return
+    end
 TextPrintString("Teleported to Tenements",5,2)
     AreaTransitionXYZ(36, -544.59, -49.03, 31.00)
     Wait(5000)
@@ -472,42 +489,37 @@ TextPrintString("Teleported to Library",5,2)
 end
 
 function telegrocery()
+    local originalChapter = ChapterGet()
+    if originalChapter <=1 then
+        return
+    end
 TextPrintString("Teleported to Grocery Store",5,2)
     AreaTransitionXYZ(26, -572.13, 387.32, 0.07)
     Wait(5000)
 end
 
 function telebmx()
-    if ChapterGet() < 3 then do
+    local originalChapter = ChapterGet()
+    if originalChapter <=2 then
+     return
+    end
         TextPrintString("Teleported to Town Hall",5,2)
         AreaTransitionXYZ(0,650.1,-90.3,32.9)
-        Wait(5000)
-        --return 
-    end
-    elseif ChapterGet() >= 3 then
-        TextPrintString("Teleported to BMX Park",5,2)
-        AreaTransitionXYZ(62,-775.55, 634.97, 29.11)
-        Wait(5000)
-    end
+    Wait(5000)
 end
 
 function teleasylum()
-    if ChapterGet() < 3 then do
+    local originalChapter = ChapterGet()
+    if originalChapter <=4 then
+     return
+    end
          TextPrintString("Debug Asylum",4,2)
          Wait(4000)
         TextPrintString("Teleported to Asylum",5,2)
         AreaTransitionXYZ(0,-74.8,-301.3,4.4)
-        Wait(5000)
-        --return 
-    end
-    elseif ChapterGet() >= 3 then
-         TextPrintString("Debug Town Hall",4,2)
-         Wait(4000)
-        TextPrintString("Teleported to Town Hall",5,2)
-        AreaTransitionXYZ(0,650.1,-90.3,32.9)
-        Wait(5000)
-    end
+    Wait(5000)
 end
+
 
 --0,650.1,-90.3,32.9 Town Hall
 --0,113.3,-499.2,2.6 -- wonder meats
@@ -529,12 +541,20 @@ end]]
 --MinigameSetCompletion("M_PASS", true, 2000, "3_02_UNLOCK") ?
 
 function telefinalcut()
+    local originalChapter = ChapterGet()
+    if originalChapter <=2 then
+     return
+    end
 TextPrintString("Teleported to Final Cut",5,2)
-    AreaTransitionXYZ(34,-647.37, 257.80, 0.93)
+    AreaTransitionXYZ(56,-664.98,390.62,2.43)
     Wait(5000)
 end
 
 function teleaquaberry()
+    local originalChapter = ChapterGet()
+    if originalChapter <=1 then
+     return
+    end
 TextPrintString("Teleported to Aquaberry Clothing",5,2)
     AreaTransitionXYZ(33, -707.84, 259.35, 0.00)
     Wait(5000)
@@ -607,6 +627,8 @@ function arcadecam()
   CameraSetActive(14)
   CameraAllowChange(false)
   CameraAllowScriptedChange(false)
+  SoundSetAudioFocusCamera()
+  SoundSetAudioFocusPlayer()
 Wait(29000)
  CameraAllowChange(true)
  CameraAllowScriptedChange(true)
@@ -691,9 +713,12 @@ function gokart()
      local x,y,z = PlayerGetPosXYZ()
      local kart = VehicleCreateXYZ(289,x+1,y,z)
      Wait(time)
-    PedExitVehicle(gPlayer,kart)--untested
+    if PlayerIsInAnyVehicle() then
+     PlayerNoTransport()
+     VehicleDelete(PlayerGetBikeId())
+     VehicleDelete(PlayerGetLastBikeId())
+    end
     Wait(2000)--try
-    VehicleDelete(kart)
 end
 
 function money()
@@ -749,8 +774,8 @@ AreaClearAllPeds() -- ?
 PedSetGlobalAttitude_Rumble(true) -- ?
 DisablePunishmentSystem(true)
 
-TextPrintString("Debug Mayhem",4,2) --this whole thing makes complete mayhem get stuck in a loop
-Wait(4000)
+--TextPrintString("Debug Mayhem",4,2) --this whole thing makes complete mayhem get stuck in a loop
+--Wait(4000)
 TextPrintString("Complete Mayhem",29,2)
 Wait(29000) -- Feel free to change.
  
@@ -808,7 +833,7 @@ TextPrintString("You Missed Detention!",29,2)
 end
 
 function invulnerable()
-    TextPrintString("Invincible",29,2)
+    TextPrintString("Invulnerable",29,2)
     PlayerSetInvulnerable(true)
      Wait(29500)
     PlayerSetInvulnerable(false)
@@ -829,6 +854,12 @@ function bulltime()
 TextPrintString("Bullworth Bulls!",29,2)
     ClothingGetPlayer()
     local originalClothing = ClothingBackup()
+    GetCutsceneRunning()
+        if GetCutsceneRunning() == true then
+        repeat 
+         Wait(1)
+        until GetCutsceneRunning() == false
+        end
      ClothingGivePlayerOutfit("Mascot")
      ClothingSetPlayerOutfit("Mascot")
      ClothingBuildPlayer()
@@ -837,6 +868,28 @@ TextPrintString("Bullworth Bulls!",29,2)
      ClothingBuildPlayer()
     Wait(1)
 end
+
+--[[function bulltime() --new revision.
+    TextPrintString("Bullworth Bulls!",29,2)
+     ClothingGetPlayer()
+    local originalClothing = ClothingBackup()
+     ClothingGivePlayerOutfit("Mascot")
+     ClothingSetPlayerOutfit("Mascot")
+     ClothingBuildPlayer()
+    Wait(29000)
+     ClothingRestore(originalClothing)
+     ClothingBuildPlayer()
+    Wait(1)
+end
+while true do
+ local cutscene = GetCutsceneRunning()
+    if cutscene == true then
+        repeat
+            Wait(1)
+        until cutscene == false
+    elseif cutscene == false then
+    end
+end]]
 
 function nohud()
 TextPrintString("No HUD",29,2)
@@ -889,10 +942,8 @@ TextPrintString("Jimmy is weak",29,2)
     PedSetDamageGivenMultiplier(gPlayer,2,1) 
 end
 
-function bodyguard()
-TextPrintString("Debug bodyguard",4,2)
-Wait(4000)
-TextPrintString("Pete's your Bodyguard",29,2)
+function petefan()
+TextPrintString("Pete's A Fan",29,2)
     local x,y,z = PlayerGetPosXYZ()
     local bunny = PedCreateXYZ(165,x+1,y,z)
     PedRecruitAlly(gPlayer,bunny)
@@ -911,17 +962,21 @@ function nothing()
 end
 
 function onehitdeath()
-TextPrintString("Debug death",4,2)
+TextPrintString("Debug one hit death",4,2)
     Wait(4000)
 TextPrintString("One Hit Death",29,2)
     if PedIsHit(gPlayer) then
-        PedApplyDamage(gPlayer,9999)
-        PlayerGetHealth()
+        PedApplyDamage(gPlayer,PlayerGetHealth()+100)
     end
     Wait(29000)
 end
 
 function earrape()
+TextPrintString("debug sound",4,2)
+ Wait(4000)
+TextPrintString("Close Sound",29,2)
+ SoundMakeEverythingCloser()
+ Wait(29000)
 --makeaudioloud
 end
 
