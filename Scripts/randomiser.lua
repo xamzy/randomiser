@@ -1,6 +1,10 @@
+--if you decompiled this script, because you have the know how for that, good job.
+--you'll see a lot of unused, and unfinished code that i never got around to, or were just concept ideas that wouldn't even work if you made them work
+--because that wouldn't be the way you would code it, but rather just a concept to help my brain understand what i wanted to do when i come back to it.
+
 --ImportScript("\\Library\\custom.lua")
 --LaunchScript("custom.lua")
-function WaitWithText(ms) 
+--[[function WaitWithText(ms) 
     local timer = GetTimer()
     local remain = ms
     while remain > 0 do
@@ -14,7 +18,7 @@ function WaitWithText(ms)
         end
         timer = change
     end
-end
+end]] --if this is commented out, it's for a table debug version
 
 
 function T_debug()
@@ -25,6 +29,172 @@ function T_debug()
         end
     end
 end
+--end
+gFunctions = {
+    "teleasylum",
+    "teletownhall",
+    "nothing",
+    "petefan",
+    "nopower",
+    "teleaquaberry",
+    "telefinalcut",
+    "teletenements",
+    "telebdorm",
+    "fov",
+    "nohud",
+    "bulltime",
+    "invulnerable",
+    "gravity",
+    "onehitko",
+    "money",
+    "gokart",
+    "snow",
+    "wanted",
+    "takedamage",
+    "doublespeed",
+    "halfspeed",
+    "arcadecam",
+    "sheldonatorspawner",
+    "lockup",
+    "justdie",
+    "lagspike -poscrash",
+    "fakelag -poscrash",
+    "evilcars",
+	"RAND_InvalidTest",
+}
+
+--[[function RAND_SufferWithdrawl()
+	local count = 20
+	while true do
+		local before = GetTimer()
+		TextPrintString("~ATTACK~\nYou are suffering from cocaine withdrawl!",0,2)
+		Wait(0)
+		if IsButtonBeingPressed(6,0) then
+			count = count - 1
+			if count <= 0 then
+				break
+			end
+		end
+		local per_second = (GetTimer() - before) / 1000
+		local health = PlayerGetHealth() - 16*per_second
+		if health <= 0 then
+			-- don't die, just be weak and puke.
+			PlayerSetHealth(1)
+			break
+		end
+		PlayerSetHealth(health)
+	end
+	PedSetActionNode(gPlayer,"/Global/Ambient/Scripted/SpecialPuke","Act/Anim/Ambient.act")
+end]]
+
+--[[function RAND_Instigate()
+	while true do
+		if not SoundSpeechPlaying(gPlayer) then
+			local x,y,z = PlayerGetPosXYZ()
+			local peds = {PedFindInAreaXYZ(x,y,z,5)}
+			local spoke = false
+			table.remove(peds,1)
+			for _,ped in ipairs(peds) do
+				if PedIsValid(ped) and not PedIsPlayer(ped) and not PedIsInCombat(ped) then
+					if not spoke then
+						spoke = true
+						SoundPlayAmbientSpeechEvent(gPlayer,"PLAYER_TAUNT_COMBAT")
+					end
+					PedSetPedToTypeAttitude(ped,13,0)
+					PedAttackPlayer(ped,3)
+				end
+			end
+		end
+		Wait(1000)
+	end
+end]]
+
+--[[function RAND_TimerTest()
+	for i = 1,5 do
+		TextPrintString("#"..i,1,1)
+		Wait(1000)
+	end
+end
+function RAND_FailureTest()
+	algerbuttfuck()
+end]]
+
+function T_table()
+	local i,n = 1,table.getn(gFunctions)
+	while not SystemIsReady() do
+		Wait(0)
+	end
+	while true do
+		TextPrintString(i.."/"..n..") "..gFunctions[i],0,2)
+		Wait(0)
+		if IsButtonBeingPressed(0,0) then
+			i = i - 1
+			if i < 1 then
+				i = n
+			end
+		elseif IsButtonBeingPressed(1,0) then
+			i = i + 1
+			if i > n then
+				i = 1
+			end
+		elseif IsButtonBeingPressed(3,0) then
+			local func = getfenv(1)[gFunctions[i]]
+            local status,message
+			if type(func) == "function" then
+				-- Run function as a coroutine.
+				-- Wait is globally replaced with yield.
+				-- Double tap down to break.
+				local tapped
+				local resume
+				local c = coroutine.create(func)
+				local f_wait = _G.Wait
+				_G.Wait = coroutine.yield
+				status,message = coroutine.resume(c)
+				_G.Wait = f_wait
+				resume = GetTimer() + (tonumber(message) or 0)
+				while coroutine.status(c) == "suspended" do
+					f_wait(0)
+					if IsButtonBeingPressed(3,0) then
+						-- break on double tap.
+						if not tapped then
+							tapped = GetTimer() + 200
+						elseif GetTimer() < tapped then
+							break
+						end
+					end
+					if GetTimer() >= resume then
+						_G.Wait = coroutine.yield
+						status,message = coroutine.resume(c)
+						_G.Wait = f_wait
+						resume = GetTimer() + (tonumber(message) or 0)
+					end
+				end
+			else
+				status,message = false,gFunctions[i].." isn't a function"
+			end
+			if not status then
+				-- show error message:
+				local expire = GetTimer() + 500
+				repeat
+					TextPrintString(tostring(message),0,2)
+					Wait(0)
+				until IsButtonBeingPressed(3,0) and GetTimer() >= expire
+			end
+		end
+    end
+end
+
+--[[function T_terminate()
+    while true do
+        Wait(0)
+        if IsButtonPressed(14,0) and IsButtonPressed(15,0) then
+         TerminateThread("T_RandomFuncs") --added to terminate random funcs so timer does nothing
+        end
+        if IsButtonPressed(14,0) and IsButtonPressed(12,0) then
+         T_RandomFuncs()
+        end
+    end
+end]]
 
 --[[gRandom = {p=0}
 StartRandom = function() -- random value based on points system
@@ -69,7 +239,33 @@ TextPrintString(GetRandom(),1,1)]]
 
 
 function T_RandomFuncs()
-    local funcs = {onehitdeath,teleasylum,telebmx,nothing,petefan,nopower,teleaquaberry,telefinalcut,teletenements,telebdorm,fov,nohud,bulltime,invulnerable,gravity,onehitko,money,gokart,snow,wanted,takedamage,doublespeed,halfspeed,arcadecam,sheldonatorspawner,lockup,justdie}
+    local funcs = {teleasylum,
+                    teletownhall,
+                    nothing,
+                    petefan,
+                    nopower,
+                    teleaquaberry,
+                    telefinalcut,
+                    teletenements,
+                    telebdorm,
+                    fov,
+                    nohud,
+                    bulltime,
+                    invulnerable,
+                    gravity,
+                    onehitko,
+                    money,
+                    gokart,
+                    snow,
+                    wanted,
+                    takedamage,
+                    doublespeed,
+                    halfspeed,
+                    arcadecam,
+                    evilcars,
+                    sheldonatorspawner,
+                    lockup,
+                    justdie}--onehitdeath,teleasylum,telebmx,nothing,petefan,nopower,teleaquaberry,telefinalcut,teletenements,telebdorm,fov,nohud,bulltime,invulnerable,gravity,onehitko,money,gokart,snow,wanted,takedamage,doublespeed,halfspeed,arcadecam,sheldonatorspawner,lockup,justdie
     local count = table.getn(funcs)
     while true do
         WaitWithText(30000)
@@ -83,6 +279,8 @@ function main()
     CreateThread("T_RandomFuncs")
     CreateThread("F_GetPlayerPos")
     CreateThread("T_debug")
+    CreateThread("T_table")
+    --CreateThread("T_terminate")
 end
 
 
@@ -475,6 +673,8 @@ end
 function teletenements()
     local originalChapter = ChapterGet()
     if originalChapter <=2 then
+        TextPrintString("error: wrong chapter - testers ignore",3,2)
+        Wait(3000)
         return
     end
 TextPrintString("Teleported to Tenements",5,2)
@@ -491,6 +691,8 @@ end
 function telegrocery()
     local originalChapter = ChapterGet()
     if originalChapter <=1 then
+        TextPrintString("error: wrong chapter - testers ignore",3,2)
+        Wait(3000)
         return
     end
 TextPrintString("Teleported to Grocery Store",5,2)
@@ -498,10 +700,12 @@ TextPrintString("Teleported to Grocery Store",5,2)
     Wait(5000)
 end
 
-function telebmx()
+function teletownhall()
     local originalChapter = ChapterGet()
-    if originalChapter <=2 then
-     return
+    if originalChapter <=1 then
+        TextPrintString("error: wrong chapter - testers ignore",3,2)
+        Wait(3000)
+        return
     end
         TextPrintString("Teleported to Town Hall",5,2)
         AreaTransitionXYZ(0,650.1,-90.3,32.9)
@@ -511,10 +715,10 @@ end
 function teleasylum()
     local originalChapter = ChapterGet()
     if originalChapter <=4 then
-     return
+        TextPrintString("error: wrong chapter - testers ignore",3,2)
+        Wait(3000)
+        return
     end
-         TextPrintString("Debug Asylum",4,2)
-         Wait(4000)
         TextPrintString("Teleported to Asylum",5,2)
         AreaTransitionXYZ(0,-74.8,-301.3,4.4)
     Wait(5000)
@@ -543,7 +747,9 @@ end]]
 function telefinalcut()
     local originalChapter = ChapterGet()
     if originalChapter <=2 then
-     return
+        TextPrintString("error: wrong chapter - testers ignore",3,2)
+        Wait(3000)
+        return
     end
 TextPrintString("Teleported to Final Cut",5,2)
     AreaTransitionXYZ(56,-664.98,390.62,2.43)
@@ -553,7 +759,9 @@ end
 function teleaquaberry()
     local originalChapter = ChapterGet()
     if originalChapter <=1 then
-     return
+        TextPrintString("error: wrong chapter - testers ignore",3,2)
+        Wait(3000)
+        return
     end
 TextPrintString("Teleported to Aquaberry Clothing",5,2)
     AreaTransitionXYZ(33, -707.84, 259.35, 0.00)
@@ -614,6 +822,8 @@ IJOCKS          59  -748.85, 348.84, 3.51
 IPREPS          60  -773.40, 351.50, 6.41
 IGRSRS          61  -691.91, 344.91, 3.29
 BMXTRACK        62  -775.55, 634.97, 29.11
+ISLAND3(TEST)   22  -9.9879999160767, 21.420000076294, 30.059999465942 - TO LOAD: AreaRegisterAreaScript(22, "AreaScripts/Island3.lua")
+Test Area       31  -7.401000,-24.801001,14.500000 - TO LOAD: AreaRegisterAreaScript(31, "AreaScripts/TestArea.lua")
 end
 ]]
 --[[function testfunction()
@@ -679,6 +889,7 @@ end
 
 
 function snow()
+    if ChapterGet() ~= 2 then --new snow method.
     local originalChapter = ChapterGet()
     local originalWeather = WeatherGet()
     TextPrintString("Forced Snow",29,2)
@@ -690,6 +901,10 @@ function snow()
      WeatherSet(originalWeather)
      WeatherForceSnow(false)
     Wait(1000)
+    elseif ChapterGet() then
+     Wait(0)
+     TextPrintString("You got lucky, QA... will implement returning summer values",3,1)
+    end
 end
 
 
@@ -713,11 +928,13 @@ function gokart()
      local x,y,z = PlayerGetPosXYZ()
      local kart = VehicleCreateXYZ(289,x+1,y,z)
      Wait(time)
-    if PlayerIsInAnyVehicle() then
-     PlayerNoTransport()
-     VehicleDelete(PlayerGetBikeId())
-     VehicleDelete(PlayerGetLastBikeId())
-    end
+     PlayerDismountBike()
+     PlayerDetachFromVehicle()
+        if PedGetWeapon(gPlayer) == 437 then
+         PedSetActionNode(gPlayer,"/Global","Act/Globals.act")
+         PedSetWeapon(gPlayer,-1)
+         PedSetActionNode(gPlayer,"/Global","Act/Globals.act")
+        end
     Wait(2000)--try
 end
 
@@ -735,7 +952,7 @@ end
 end]]
 
 function onehitko()
-    TextPrintString("One Hit KO",29,2)
+    TextPrintString("Super Punch",29,2)
     PedSetDamageGivenMultiplier(gPlayer,2,50)
      Wait(29000)
     PedSetDamageGivenMultiplier(gPlayer,2,1) 
@@ -743,7 +960,7 @@ end
 
 function mayhem()
 local originalAttitudes = {}
-local currentIndex = 0;
+local currentIndex = 0
 for i=1,5 do --iterate through Nerds, Jocks, Dropouts, Greasers and Preps.
     for j=1,13 do -- Iterate from Nerds through to the player.
         if (i~=3 and j ~= 3 and (j<6 or j==13) and i~=j) then -- Ignore Dropouts, only allow Nerd/Jock/Greaser/Prep/Player relationships.  
@@ -753,7 +970,7 @@ for i=1,5 do --iterate through Nerds, Jocks, Dropouts, Greasers and Preps.
     end
 end
  
-Wait(1000) -- Feel Free to change.
+Wait(500) -- Feel Free to change.
  
 --Initiate Mayhem
 for i=1,5 do -- iterate through Nerds, Jocks, Dropouts, Greasers and Preps.
@@ -774,18 +991,18 @@ AreaClearAllPeds() -- ?
 PedSetGlobalAttitude_Rumble(true) -- ?
 DisablePunishmentSystem(true)
 
---TextPrintString("Debug Mayhem",4,2) --this whole thing makes complete mayhem get stuck in a loop
+--TextPrintString("Debug Mayhem",4,2) --having this print enabled breaks all the code, removing it also breaks all the code. don't remove it. thanks.
 --Wait(4000)
 TextPrintString("Complete Mayhem",29,2)
 Wait(29000) -- Feel free to change.
  
 --Disable Mayhem
-currentIndex=0;
+currentIndex=0
 for i=1,5 do --iterate through Nerds, Jocks, Dropouts, Greasers and Preps.
     for j=1,13 do -- Iterate from Nerds through to the player.
         if (i~=3 and j ~= 3 and (j<6 or j==13) and i~=j) then -- Ignore Dropouts, only allow Nerd/Jock/Greaser/Prep/Player relationships.  
             PedSetTypeToTypeAttitude(i,j,originalAttitudes[currentIndex]) -- Restore original relationships.
-            currentIndex = currentIndex+1;
+            currentIndex = currentIndex+1
         end
     end
 end
@@ -859,6 +1076,7 @@ TextPrintString("Bullworth Bulls!",29,2)
         repeat 
          Wait(1)
         until GetCutsceneRunning() == false
+        elseif GetCutsceneRunning() == false then
         end
      ClothingGivePlayerOutfit("Mascot")
      ClothingSetPlayerOutfit("Mascot")
@@ -936,14 +1154,14 @@ TextPrintString("No Running Allowed",29,2)
 end
 
 function nopower()
-TextPrintString("Jimmy is weak",29,2)
+TextPrintString("No Punch Power",29,2)
     PedSetDamageGivenMultiplier(gPlayer,2,0.01)
      Wait(29000)
     PedSetDamageGivenMultiplier(gPlayer,2,1) 
 end
 
 function petefan()
-TextPrintString("Pete's A Fan",29,2)
+TextPrintString("Pete's'a Time",29,2)
     local x,y,z = PlayerGetPosXYZ()
     local bunny = PedCreateXYZ(165,x+1,y,z)
     PedRecruitAlly(gPlayer,bunny)
@@ -962,8 +1180,6 @@ function nothing()
 end
 
 function onehitdeath()
-TextPrintString("Debug one hit death",4,2)
-    Wait(4000)
 TextPrintString("One Hit Death",29,2)
     if PedIsHit(gPlayer) then
         PedApplyDamage(gPlayer,PlayerGetHealth()+100)
@@ -1026,7 +1242,7 @@ TextPrintString("Lag",29,2)
         repeat
          induceArtificalLagspike(1650,framerate)
          Wait(1050)
-        until start > expire
+        until timer > expire --start > expire
     end
 end
 
@@ -1034,7 +1250,7 @@ function fakelag()
 TextPrintString("Lag",29,2)
     time_between_lags = 10000
     condition = false
-    while true do
+    while true do --consider removing for a static time
         Wait(0)
         Wait(time_between_lags)
         repeat
@@ -1055,8 +1271,7 @@ TextPrintString("Lag",29,2)
 end
 
 function evilcars()
-TextPrintString("Evil Cars",29,2)
-    while true do
+        TextPrintString("Confused Cars",28,2)
         Wait(0)
         tab_veh = VehicleGetAllVehicles()
         for i = 1,table.getn(tab_veh) do
@@ -1064,12 +1279,11 @@ TextPrintString("Evil Cars",29,2)
             if VehicleIsValid(tab_veh[i]) then
                 if VehicleGetModelId(tab_veh[i]) > 283 and not PlayerIsInVehicle(tab_veh[i]) then
                     VehicleMoveToXYZ(tab_veh[i],player_x,player_y,player_z)
-                    VehicleSetCruiseSpeed(tab_veh[i],15)
-                    VehicleOverrideAmbientCruiseSpeed(tab_veh[i],15)
+                    VehicleSetCruiseSpeed(tab_veh[i],80) --15
+                    VehicleOverrideAmbientCruiseSpeed(tab_veh[i],80) --15
                 end
             end
         end
-        
         
         tab_ped = PedGetAllPeds()
         for i = 1,table.getn(tab_ped) do
@@ -1084,8 +1298,12 @@ TextPrintString("Evil Cars",29,2)
                 end
             end
         end
-    end
+    Wait(28000)
+    return false
 end
+
+
+
 function PedGetAllPeds()
     local peds = {PedFindInAreaXYZ(0,0,0,999999)}
     table.remove(peds,1)
@@ -1102,10 +1320,9 @@ end
 
 
 function forcepackage()
-    TextPrintString("Debug gift",4,2)
-    Wait(4000)
-    TextPrintString("Receieve a Gift",10,2)
     while true do
+        Wait(0)
+        TextPrintString("Receieve a Gift",10,2)
         local peds = {PedFindInAreaXYZ(0,0,0,999999)}
         local count = table.getn(peds)
         table.remove(peds,1)
@@ -1121,12 +1338,45 @@ function forcepackage()
                 return
             end
         end
-        Wait(0)
+        --Wait(29000)
+    end
+end
+
+function package2()
+        while true do
+            Wait(0)
+            TextPrintString("package two",10,2)
+            Wait(math.random(1,10)*1000)
+            local peds = {PedFindInAreaXYZ(0,0,0,999999)}
+            local pick = math.random(2,table.getn(peds))
+            if peds[pick] then
+                if DistanceBetweenPeds3D(gPlayer,peds[pick]) < 6 and not PedIsPlayer(peds[pick]) then
+                    local start = GetTimer()
+                    local startingA = AreaGetVisible()
+                    PedClearObjectives(peds[pick])
+                    PedIgnoreStimuli(peds[pick],true)
+                    PedSetActionNode(peds[pick], "/Global/Player/Gifts/Errand_IND_Package", "Act/Player.act")
+                    repeat
+                        Wait(0)
+                        PedLockTarget(peds[pick],gPlayer,3)
+                        TextPrintString(tostring(GetTimer()),1,1)
+                    until not PedIsPlaying(peds[pick], "/Global/Player/Gifts/Errand_IND_Package", true) or GetTimer() > start+15000 or DistanceBetweenPeds3D(gPlayer,peds[pick]) > 6.2 or AreaGetVisible() ~= startingA
+                CameraReset()
+                CameraReturnToPlayer()
+                PedLockTarget(peds[pick],-1)
+                PedLockTarget(gPlayer,-1)
+                PedIgnoreStimuli(peds[pick],false)
+                PlayerSetControl(1)
+                PedSetWeapon(peds[pick],-1)
+                PedSetActionNode(peds[pick],"/Global","Act/Globals.act")
+                PedClearObjectives(peds[pick])
+            end
+        end
     end
 end
 
 function alonattack()
-TextPrintString("Alon Attack",29,2)
+TextPrintString("Alon us to introduce ourselves",29,2)
     while true do
         Wait(0)
         local peds = {PedFindInAreaXYZ(0,0,0,999999)}
@@ -1150,3 +1400,14 @@ TextPrintString("Alon Attack",29,2)
         Wait(29000)
     end
 end
+
+
+
+--freezing skateboard, random stops if you're on it.
+
+--[[function invertcontrols()
+TextPrintString("invert debug",5,2)
+ Wait(5000)
+TextPrintString("Invert Controls",29,2)
+has to be done through nodes most likely.. could be a pain
+if you decompiled the script like a naughty fucker, this is a sneak peak of another feature that may be included in the future]]
