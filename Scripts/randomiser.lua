@@ -1,7 +1,3 @@
---if you decompiled this script, because you have the know how for that, good job.
---you'll see a lot of unused, and unfinished code that i never got around to, or were just concept ideas that wouldn't even work if you made them work
---because that wouldn't be the way you would code it, but rather just a concept to help my brain understand what i wanted to do when i come back to it.
-
 --ImportScript("\\Library\\custom.lua")
 --LaunchScript("custom.lua")
 --[[function WaitWithText(ms) 
@@ -1400,14 +1396,3 @@ TextPrintString("Alon us to introduce ourselves",29,2)
         Wait(29000)
     end
 end
-
-
-
---freezing skateboard, random stops if you're on it.
-
---[[function invertcontrols()
-TextPrintString("invert debug",5,2)
- Wait(5000)
-TextPrintString("Invert Controls",29,2)
-has to be done through nodes most likely.. could be a pain
-if you decompiled the script like a naughty fucker, this is a sneak peak of another feature that may be included in the future]]
