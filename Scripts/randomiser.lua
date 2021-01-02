@@ -1187,7 +1187,7 @@ function earrape()
 TextPrintString("debug sound",4,2)
  Wait(4000)
 TextPrintString("Close Sound",29,2)
- SoundMakeEverythingCloser()
+ --counter
  Wait(29000)
 --makeaudioloud
 end
@@ -1196,9 +1196,9 @@ function vibration()
 TextPrintString("Debug Vibration",4,2)
 Wait(4000)
 TextPrintString("Controller Vibration Hell",29,2)
-    StartVibration()
+    --start
      Wait(29000)
-    StopVibration()
+    --stop
 end
 
 function induceArtificalLagspike(durationMs,goalFrameRate)
